@@ -1,0 +1,82 @@
+<h2 class="panel-heading">
+  {{ title }}
+</h2>
+
+<div class="row">
+
+    <div class="userTable">
+
+      <table class="table">
+
+        <thead class="thead-inverse">
+          <tr>
+            <th>Employee</th>
+            <th>Tasks</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let user of users">
+            <td>
+              {{user.name ? user.name : ''}}
+            </td>
+            <td>
+              <form [formGroup]="selectForm" (ngSubmit)="assign(user)">
+
+                <div class="input-group">
+                  
+                  <select class="form-control" formControlName="task" >
+
+                    <option [ngValue]="null" value="" disabled>Select a task</option> 
+                    <option *ngFor='let task of tasksNotAssigned' [ngValue]="task">{{task.name}}</option> 
+
+                  </select>
+
+                  <button type="submit" class="btn btn-primary">Assign</button>
+                  
+                </div>
+              
+              </form>
+              
+
+              <ng-container *ngFor="let task of tasksAssigned">
+                <div *ngFor="let userTask of user.tasks">
+                  <div *ngIf="userTask === task">
+                    <table class="innerTable">
+                      <tbody>
+                        <tr>
+                          <td width="70%" class="innerTd">
+                            <ul >
+                              <li>
+                                  <div class="view">
+                                      <label>{{task.name}}</label>
+                                      <button type="button" class="close" aria-label="Close" (click)="removeTask(user, userTask)">
+                                          <span aria-hidden="true">&times;</span>
+                                      </button>
+                                  </div>
+                              </li>
+                            </ul>
+                          </td>
+                          <td width="30%">
+                            Progress: <b>{{userTask.percent}}%</b>
+                            <mat-slider
+                                    min="0"
+                                    max="100"
+                                    step="10"
+                                    [(ngModel)]="userTask.percent"
+                                    >
+                            </mat-slider>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </ng-container>
+            </td>
+
+          </tr>
+        </tbody>
+    </table>
+  </div>
+</div>
